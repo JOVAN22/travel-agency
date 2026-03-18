@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { sanitizeText } from '@/lib/utils';
+
+const MAX_BODY_BYTES = 10 * 1024 * 1024; // 10MB
+const MAX_AGENCIES_PER_BATCH = 500;
+const MAX_AGENTS_PER_BATCH = 500;
 
 interface AgencyInput {
   name: string;
@@ -17,28 +22,102 @@ interface AgentInput {
   status?: string;
 }
 
+interface AgencyRow {
+  first_name: string;
+  last_name: string;
+  role?: string;
+  status?: string;
+  agency_id: string;
+}
+
+interface UploadBody {
+  agencies?: AgencyInput[];
+  agents?: AgentInput[];
+}
+
+interface UploadResponse {
+  inserted_agencies: number;
+  inserted_agents: number;
+  errors: string[];
+}
+
 export async function POST(request: NextRequest) {
-  let body: { agencies?: AgencyInput[]; agents?: AgentInput[] };
+  // Check content-length header before parsing
+  const contentLength = request.headers.get('content-length');
+  if (contentLength && parseInt(contentLength) > MAX_BODY_BYTES) {
+    return NextResponse.json(
+      { error: 'Request body too large (max 10MB)' },
+      { status: 413 }
+    );
+  }
+
+  let body: UploadBody;
 
   try {
-    body = await request.json();
+    const text = await request.text();
+    if (text.length > MAX_BODY_BYTES) {
+      return NextResponse.json(
+        { error: 'Request body too large (max 10MB)' },
+        { status: 413 }
+      );
+    }
+    body = JSON.parse(text) as UploadBody;
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+
   const { agencies = [], agents = [] } = body;
+
+  if (!Array.isArray(agencies) || !Array.isArray(agents)) {
+    return NextResponse.json(
+      { error: 'agencies and agents must be arrays' },
+      { status: 400 }
+    );
+  }
+
+  if (agencies.length > MAX_AGENCIES_PER_BATCH) {
+    return NextResponse.json(
+      { error: `Batch size exceeds limit: max ${MAX_AGENCIES_PER_BATCH} agencies per request` },
+      { status: 400 }
+    );
+  }
+
+  if (agents.length > MAX_AGENTS_PER_BATCH) {
+    return NextResponse.json(
+      { error: `Batch size exceeds limit: max ${MAX_AGENTS_PER_BATCH} agents per request` },
+      { status: 400 }
+    );
+  }
+
   const errors: string[] = [];
   let inserted_agencies = 0;
   let inserted_agents = 0;
 
-  // Validate agencies
-  const validAgencies = agencies.filter((a, i) => {
-    if (!a.name) {
-      errors.push(`Agency at index ${i} is missing required field: name`);
-      return false;
+  // Validate and sanitize agencies
+  const validAgencies: AgencyInput[] = [];
+  for (let i = 0; i < agencies.length; i++) {
+    const a = agencies[i];
+    if (!a || typeof a !== 'object') {
+      errors.push(`Agency at index ${i} is not a valid object`);
+      continue;
     }
-    return true;
-  });
+    const name = typeof a.name === 'string' ? sanitizeText(a.name) : '';
+    if (!name) {
+      errors.push(`Agency at index ${i} is missing required field: name`);
+      continue;
+    }
+    validAgencies.push({
+      name,
+      city: typeof a.city === 'string' ? sanitizeText(a.city) : undefined,
+      country: typeof a.country === 'string' ? sanitizeText(a.country) : undefined,
+      phone: typeof a.phone === 'string' ? sanitizeText(a.phone) : undefined,
+      email: typeof a.email === 'string' ? sanitizeText(a.email) : undefined,
+    });
+  }
 
   // Insert agencies
   const agencyNameToId = new Map<string, string>();
@@ -50,7 +129,7 @@ export async function POST(request: NextRequest) {
       .select('id, name');
 
     if (agencyError) {
-      return NextResponse.json({ error: agencyError.message }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to insert agencies' }, { status: 500 });
     }
 
     inserted_agencies = insertedAgencies?.length ?? 0;
@@ -65,7 +144,7 @@ export async function POST(request: NextRequest) {
     const missingAgencyNames = [
       ...new Set(
         agents
-          .map((a) => a.agency_name)
+          .map((a) => (typeof a?.agency_name === 'string' ? sanitizeText(a.agency_name) : ''))
           .filter((name) => name && !agencyNameToId.has(name))
       ),
     ];
@@ -81,31 +160,39 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const validAgents = [];
+    const validAgents: AgencyRow[] = [];
     for (let i = 0; i < agents.length; i++) {
       const agent = agents[i];
-      if (!agent.first_name) {
+      if (!agent || typeof agent !== 'object') {
+        errors.push(`Agent at index ${i} is not a valid object`);
+        continue;
+      }
+      const first_name = typeof agent.first_name === 'string' ? sanitizeText(agent.first_name) : '';
+      const last_name = typeof agent.last_name === 'string' ? sanitizeText(agent.last_name) : '';
+      const agency_name = typeof agent.agency_name === 'string' ? sanitizeText(agent.agency_name) : '';
+
+      if (!first_name) {
         errors.push(`Agent at index ${i} is missing required field: first_name`);
         continue;
       }
-      if (!agent.last_name) {
+      if (!last_name) {
         errors.push(`Agent at index ${i} is missing required field: last_name`);
         continue;
       }
-      if (!agent.agency_name) {
+      if (!agency_name) {
         errors.push(`Agent at index ${i} is missing required field: agency_name`);
         continue;
       }
-      const agency_id = agencyNameToId.get(agent.agency_name);
+      const agency_id = agencyNameToId.get(agency_name);
       if (!agency_id) {
-        errors.push(`Agent at index ${i}: agency "${agent.agency_name}" not found`);
+        errors.push(`Agent at index ${i}: agency "${agency_name}" not found`);
         continue;
       }
       validAgents.push({
-        first_name: agent.first_name,
-        last_name: agent.last_name,
-        role: agent.role,
-        status: agent.status,
+        first_name,
+        last_name,
+        role: typeof agent.role === 'string' ? sanitizeText(agent.role) : undefined,
+        status: typeof agent.status === 'string' ? sanitizeText(agent.status) : undefined,
         agency_id,
       });
     }
@@ -117,12 +204,13 @@ export async function POST(request: NextRequest) {
         .select('id');
 
       if (agentsError) {
-        return NextResponse.json({ error: agentsError.message }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to insert agents' }, { status: 500 });
       }
 
       inserted_agents = insertedAgents?.length ?? 0;
     }
   }
 
-  return NextResponse.json({ inserted_agencies, inserted_agents, errors });
+  const response: UploadResponse = { inserted_agencies, inserted_agents, errors };
+  return NextResponse.json(response);
 }

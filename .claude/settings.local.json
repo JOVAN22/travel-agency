@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(find /c/travel-agency -maxdepth 2 -type f \\\\\\(-name *.sql -o -name *.prisma -o -name .env* \\\\\\))",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

@@ -1,6 +1,49 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+interface AgentRow {
+  agent_id: string;
+  commission_amount: number;
+  agents: { first_name: string; last_name: string; agencies: { name: string } | null } | null;
+}
+
+interface SaleRow {
+  sale_price: number | null;
+  commission_amount: number | null;
+  final_commission_pct: number | null;
+}
+
+interface SaleByMonthRow {
+  sale_date: string;
+  sale_price: number | null;
+  commission_amount: number | null;
+}
+
+interface TopAgent {
+  agent_id: string;
+  name: string;
+  agency_name: string | null;
+  total_commission: number;
+}
+
+interface MonthlyStats {
+  month: string;
+  total_sales: number;
+  total_revenue: number;
+  total_commission: number;
+}
+
+interface DashboardStatsResponse {
+  total_agencies: number;
+  total_agents: number;
+  total_products: number;
+  total_sales: number;
+  total_revenue: number;
+  avg_commission_pct: number;
+  top_agents: TopAgent[];
+  sales_by_month: MonthlyStats[];
+}
+
 export async function GET() {
   const [
     agenciesCount,
@@ -40,26 +83,26 @@ export async function GET() {
   ]);
 
   if (agenciesCount.error) {
-    return NextResponse.json({ error: agenciesCount.error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
   if (agentsCount.error) {
-    return NextResponse.json({ error: agentsCount.error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
   if (productsCount.error) {
-    return NextResponse.json({ error: productsCount.error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
   if (salesAgg.error) {
-    return NextResponse.json({ error: salesAgg.error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
   if (topAgents.error) {
-    return NextResponse.json({ error: topAgents.error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
   if (salesByMonth.error) {
-    return NextResponse.json({ error: salesByMonth.error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
 
   // Aggregate totals
-  const allSales = salesAgg.data ?? [];
+  const allSales = (salesAgg.data ?? []) as unknown as SaleRow[];
   const total_sales = allSales.length;
   const total_revenue = allSales.reduce((sum, s) => sum + (s.sale_price ?? 0), 0);
   const avg_commission_pct =
@@ -68,17 +111,9 @@ export async function GET() {
       : 0;
 
   // Top 5 agents by total commission_amount
-  type AgentRow = {
-    agent_id: string;
-    commission_amount: number;
-    agents: { first_name: string; last_name: string; agencies: { name: string } | null } | null;
-  };
-  const agentTotals = new Map<
-    string,
-    { agent_id: string; name: string; agency_name: string | null; total_commission: number }
-  >();
+  const agentTotals = new Map<string, TopAgent>();
 
-  for (const row of (topAgents.data ?? []) as AgentRow[]) {
+  for (const row of (topAgents.data ?? []) as unknown as AgentRow[]) {
     const existing = agentTotals.get(row.agent_id);
     if (existing) {
       existing.total_commission += row.commission_amount ?? 0;
@@ -99,12 +134,9 @@ export async function GET() {
     .slice(0, 5);
 
   // Sales by month (last 12 months)
-  const monthlyMap = new Map<
-    string,
-    { month: string; total_sales: number; total_revenue: number; total_commission: number }
-  >();
+  const monthlyMap = new Map<string, MonthlyStats>();
 
-  for (const row of salesByMonth.data ?? []) {
+  for (const row of (salesByMonth.data ?? []) as unknown as SaleByMonthRow[]) {
     const month = row.sale_date.slice(0, 7); // YYYY-MM
     const existing = monthlyMap.get(month);
     if (existing) {
@@ -125,7 +157,7 @@ export async function GET() {
     a.month.localeCompare(b.month)
   );
 
-  return NextResponse.json({
+  const response: DashboardStatsResponse = {
     total_agencies: agenciesCount.count ?? 0,
     total_agents: agentsCount.count ?? 0,
     total_products: productsCount.count ?? 0,
@@ -134,5 +166,9 @@ export async function GET() {
     avg_commission_pct: parseFloat(avg_commission_pct.toFixed(4)),
     top_agents,
     sales_by_month,
+  };
+
+  return NextResponse.json(response, {
+    headers: { 'Cache-Control': 'public, max-age=60' },
   });
 }

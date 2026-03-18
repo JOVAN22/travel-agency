@@ -1,11 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { parsePagination, sanitizeSearch } from '@/lib/utils';
+
+interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
+interface AgenciesResponse {
+  data: Record<string, unknown>[];
+  pagination: PaginationMeta;
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const page = parseInt(searchParams.get('page') ?? '1');
-  const limit = parseInt(searchParams.get('limit') ?? '20');
-  const search = searchParams.get('search') ?? '';
+  const pagination = parsePagination(
+    searchParams.get('page'),
+    searchParams.get('limit')
+  );
+
+  if (!pagination) {
+    return NextResponse.json(
+      { error: 'page must be a positive integer; limit must be between 1 and 100' },
+      { status: 400 }
+    );
+  }
+
+  const { page, limit } = pagination;
+  const search = sanitizeSearch(searchParams.get('search'));
   const offset = (page - 1) * limit;
 
   let query = supabase
@@ -21,16 +45,18 @@ export async function GET(request: NextRequest) {
   const { data, error, count } = await query;
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch agencies' }, { status: 500 });
   }
 
-  return NextResponse.json({
-    data,
+  const response: AgenciesResponse = {
+    data: data ?? [],
     pagination: {
       page,
       limit,
       total: count ?? 0,
       total_pages: Math.ceil((count ?? 0) / limit),
     },
-  });
+  };
+
+  return NextResponse.json(response);
 }
