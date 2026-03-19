@@ -7,6 +7,8 @@ import {
   Package,
   DollarSign,
   TrendingUp,
+  Sparkles,
+  Lightbulb,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -53,36 +55,41 @@ const kpiCards = (stats: DashboardStats) => [
     label: 'Total Agencies',
     value: stats.total_agencies,
     icon: Building2,
-    gradient: 'from-[#1B2B5B] to-[#2A3F7E]',
-    iconBg: 'bg-white/20',
+    accentBorder: 'border-l-[#0770E3]',
+    iconBg: 'bg-[#0770E3]/10',
+    iconColor: 'text-[#0770E3]',
   },
   {
     label: 'Total Agents',
     value: stats.total_agents,
     icon: Users,
-    gradient: 'from-[#2E86C1] to-[#3498DB]',
-    iconBg: 'bg-white/20',
+    accentBorder: 'border-l-[#8B5CF6]',
+    iconBg: 'bg-[#8B5CF6]/10',
+    iconColor: 'text-[#8B5CF6]',
   },
   {
     label: 'Total Products',
     value: stats.total_products,
     icon: Package,
-    gradient: 'from-emerald-600 to-emerald-500',
-    iconBg: 'bg-white/20',
+    accentBorder: 'border-l-[#1BAC4B]',
+    iconBg: 'bg-[#1BAC4B]/10',
+    iconColor: 'text-[#1BAC4B]',
   },
   {
     label: 'Total Revenue',
     value: `$${stats.total_revenue?.toLocaleString() ?? 0}`,
     icon: DollarSign,
-    gradient: 'from-[#F39C12] to-[#E67E22]',
-    iconBg: 'bg-white/20',
+    accentBorder: 'border-l-[#FF6B00]',
+    iconBg: 'bg-[#FF6B00]/10',
+    iconColor: 'text-[#FF6B00]',
   },
   {
     label: 'Avg Commission',
     value: `${stats.avg_commission_pct?.toFixed(1) ?? 0}%`,
     icon: TrendingUp,
-    gradient: 'from-purple-600 to-purple-500',
-    iconBg: 'bg-white/20',
+    accentBorder: 'border-l-[#0770E3]',
+    iconBg: 'bg-[#0770E3]/10',
+    iconColor: 'text-[#0770E3]',
   },
 ]
 
@@ -101,20 +108,36 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 }
 
 const rankColors: Record<number, string> = {
-  0: 'bg-[#F39C12] text-white',
-  1: 'bg-gray-400 text-white',
-  2: 'bg-amber-700 text-white',
+  0: 'bg-[#F59E0B] text-white',
+  1: 'bg-[#9CA3AF] text-white',
+  2: 'bg-[#92400E] text-white',
 }
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [insights, setInsights] = useState<string[] | null>(null)
+  const [insightsLoading, setInsightsLoading] = useState(false)
+
+  async function fetchInsights() {
+    setInsightsLoading(true)
+    try {
+      const res = await fetch('/api/ai/insights')
+      const data = await res.json()
+      setInsights(data.insights ?? [])
+    } catch (err) {
+      console.error('Insights fetch error:', err)
+    } finally {
+      setInsightsLoading(false)
+    }
+  }
 
   useEffect(() => {
     fetch('/api/dashboard/stats')
       .then((r) => r.json())
       .then(setStats)
       .finally(() => setLoading(false))
+    fetchInsights()
   }, [])
 
   const now = new Date()
@@ -130,46 +153,46 @@ export default function Dashboard() {
   return (
     <motion.div variants={pageVariants} initial="initial" animate="animate">
       {/* Hero */}
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-10 md:py-14">
+      <div className="bg-white dark:bg-slate-900 px-6 pt-8 pb-6 border-b border-[#E5E7EB] dark:border-slate-700">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#161616] dark:text-white">
             Good {timeOfDay}, TravelHub
           </h1>
-          <p className="text-white/70 mt-1 text-sm">{dateStr}</p>
+          <p className="text-[#8F9BA8] dark:text-slate-400 mt-1 text-sm">{dateStr}</p>
         </motion.div>
       </div>
 
       <div className="p-6 space-y-6">
         {/* KPI Cards */}
         {loading ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
               <KPISkeleton key={i} />
             ))}
           </div>
         ) : stats ? (
           <motion.div
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
             variants={containerVariants}
             initial="initial"
             animate="animate"
           >
-            {kpiCards(stats).map(({ label, value, icon: Icon, gradient }) => (
+            {kpiCards(stats).map(({ label, value, icon: Icon, accentBorder, iconBg, iconColor }) => (
               <motion.div key={label} variants={itemVariants}>
                 <div
-                  className={`bg-gradient-to-br ${gradient} rounded-xl p-4 sm:p-5 shadow-lg hover:scale-[1.02] transition-transform cursor-default`}
+                  className={`bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 border-l-4 ${accentBorder} rounded-xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow cursor-default`}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-white/80 text-xs font-medium">{label}</span>
-                    <div className="bg-white/20 rounded-lg p-1.5">
-                      <Icon className="w-4 h-4 text-white" />
+                    <span className="text-[#8F9BA8] dark:text-slate-400 text-xs font-medium">{label}</span>
+                    <div className={`${iconBg} rounded-lg p-1.5`}>
+                      <Icon className={`w-4 h-4 ${iconColor}`} />
                     </div>
                   </div>
-                  <p className="text-lg sm:text-2xl font-bold text-white">{value}</p>
+                  <p className="text-lg sm:text-2xl font-bold text-[#161616] dark:text-white">{value}</p>
                 </div>
               </motion.div>
             ))}
@@ -192,10 +215,10 @@ export default function Dashboard() {
                     <XAxis dataKey="month" tick={{ fontSize: 11 }} />
                     <YAxis tick={{ fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="total_revenue" name="Revenue" fill="#2E86C1" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="total_commission" name="Commission" fill="#F39C12" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="total_revenue" name="Revenue" fill="#0770E3" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="total_commission" name="Commission" fill="#1BAC4B" radius={[4, 4, 0, 0]} />
                   </BarChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer> 
               )}
             </CardContent>
           </Card>
@@ -223,7 +246,7 @@ export default function Dashboard() {
                         <p className="text-sm font-medium truncate">{agent.name}</p>
                         <p className="text-xs text-muted-foreground truncate">{agent.agency_name}</p>
                       </div>
-                      <span className="text-xs font-semibold text-[#2E86C1] whitespace-nowrap">
+                      <span className="text-xs font-semibold text-[#0770E3] whitespace-nowrap">
                         ${agent.total_commission?.toLocaleString()}
                       </span>
                     </div>
@@ -242,8 +265,8 @@ export default function Dashboard() {
               <div className="space-y-3">
                 {[...stats.sales_by_month].reverse().slice(0, 3).map((item) => (
                   <div key={item.month} className="flex items-center gap-3 p-3 rounded-lg bg-muted/40">
-                    <div className="w-8 h-8 rounded-full bg-[#2E86C1]/10 flex items-center justify-center">
-                      <DollarSign className="w-4 h-4 text-[#2E86C1]" />
+                    <div className="w-8 h-8 rounded-full bg-[#0770E3]/10 flex items-center justify-center">
+                      <DollarSign className="w-4 h-4 text-[#0770E3]" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">{item.month}</p>
@@ -256,6 +279,42 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         )}
+
+        {/* AI Insights */}
+        <Card>
+          <div className="bg-[#0C1B3A] rounded-t-xl px-5 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-white" />
+              <h2 className="text-white font-semibold">AI Insights</h2>
+            </div>
+            <button
+              onClick={fetchInsights}
+              disabled={insightsLoading}
+              className="text-xs text-white/80 hover:text-white bg-white/10 hover:bg-white/20 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              Refresh Insights
+            </button>
+          </div>
+          <CardContent className="pt-4 space-y-3">
+            {insightsLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex gap-3 items-start">
+                  <Skeleton className="w-4 h-4 mt-0.5 flex-shrink-0 rounded" />
+                  <Skeleton className="h-4 flex-1" />
+                </div>
+              ))
+            ) : insights && insights.length > 0 ? (
+              insights.map((insight, i) => (
+                <div key={i} className="flex gap-3 items-start">
+                  <Lightbulb className="w-4 h-4 text-[#F59E0B] mt-0.5 flex-shrink-0" />
+                  <p className="text-sm">{insight}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">Loading insights…</p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </motion.div>
   )

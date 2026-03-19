@@ -61,28 +61,22 @@ export default function SearchPage() {
 
   return (
     <div>
-      {/* Hero */}
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-12 flex flex-col items-center text-center">
-        <motion.h1
-          className="text-2xl md:text-3xl font-bold text-white mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          Search
-        </motion.h1>
+      {/* Header */}
+      <div className="px-6 pt-8 pb-4 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-700">
+        <h1 className="text-2xl font-bold text-[#161616] dark:text-white mb-4">Search</h1>
         <div className="relative w-full max-w-lg">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 dark:text-slate-400 z-10 pointer-events-none" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#161616] dark:text-slate-400 z-10 pointer-events-none" />
           <input
             placeholder="Search agencies and agents..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-11 pr-11 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-base shadow-lg focus:outline-none focus:ring-2 focus:ring-[#2E86C1]/50 focus:border-[#2E86C1] transition-all"
+            className="w-full pl-11 pr-11 py-3 rounded-full bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 text-[#161616] dark:text-white placeholder-[#8F9BA8] dark:placeholder-slate-500 text-base focus:outline-none focus:ring-2 focus:ring-[#0770E3]/50 focus:border-[#0770E3] transition-all"
             autoFocus
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8F9BA8] hover:text-[#545454] transition-colors"
               aria-label="Clear search"
             >
               <X className="h-5 w-5" />
@@ -116,7 +110,7 @@ export default function SearchPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Agencies */}
             <div>
-              <h2 className="font-semibold mb-3 flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wide">
+              <h2 className="font-semibold mb-3 flex items-center gap-2 text-xs text-[#8F9BA8] dark:text-slate-400 uppercase tracking-wide">
                 <Building2 className="w-4 h-4" />
                 Agencies ({results.agencies?.length ?? 0})
               </h2>
@@ -130,7 +124,7 @@ export default function SearchPage() {
                   {results.agencies?.map((agency) => (
                     <motion.div key={agency.id} variants={itemVariants}>
                       <div
-                        className="border border-slate-200 dark:border-slate-700 rounded-xl p-4 cursor-pointer hover:scale-[1.01] hover:shadow-md hover:border-[#2E86C1]/50 transition-all bg-card"
+                        className="bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-md transition-shadow"
                         onClick={() => router.push(`/agencies/${agency.id}`)}
                       >
                         <p className="font-medium text-sm">{agency.name}</p>
@@ -149,7 +143,7 @@ export default function SearchPage() {
 
             {/* Agents */}
             <div>
-              <h2 className="font-semibold mb-3 flex items-center gap-2 text-sm text-muted-foreground uppercase tracking-wide">
+              <h2 className="font-semibold mb-3 flex items-center gap-2 text-xs text-[#8F9BA8] dark:text-slate-400 uppercase tracking-wide">
                 <User className="w-4 h-4" />
                 Agents ({results.agents?.length ?? 0})
               </h2>
@@ -166,11 +160,11 @@ export default function SearchPage() {
                     return (
                       <motion.div key={agent.id} variants={itemVariants}>
                         <div
-                          className="border border-slate-200 dark:border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-md hover:border-[#2E86C1]/50 transition-all bg-card"
+                          className="bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-xl p-4 cursor-pointer hover:shadow-md transition-shadow"
                           onClick={() => agent.agency_id && router.push(`/agencies/${agent.agency_id}`)}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#1B2B5B] flex items-center justify-center flex-shrink-0">
+                            <div className="w-10 h-10 rounded-full bg-[#0C1B3A] flex items-center justify-center flex-shrink-0">
                               <span className="text-white text-sm font-semibold">{initials || '?'}</span>
                             </div>
                             <div className="flex-1 min-w-0">

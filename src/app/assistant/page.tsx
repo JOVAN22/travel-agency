@@ -29,10 +29,10 @@ const SUGGESTIONS = [
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-2 px-4 py-2">
-      <div className="w-8 h-8 rounded-full bg-[#1B2B5B] flex items-center justify-center flex-shrink-0">
+      <div className="w-8 h-8 rounded-full bg-[#0C1B3A] flex items-center justify-center flex-shrink-0">
         <Bot className="w-4 h-4 text-white" />
       </div>
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-md px-4 py-3">
+      <div className="bg-[#F3F4F6] dark:bg-slate-700 rounded-2xl rounded-tl-sm px-4 py-3">
         <div className="flex items-center gap-1.5">
           {[0, 1, 2].map((i) => (
             <span
@@ -85,7 +85,7 @@ function SetupModal({ onClose }: { onClose: () => void }) {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-700">
           <h2 className="font-semibold text-sm flex items-center gap-2">
-            <Settings2 className="w-4 h-4 text-[#2E86C1]" />
+            <Settings2 className="w-4 h-4 text-[#0770E3]" />
             AI Assistant Setup
           </h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
@@ -100,14 +100,14 @@ function SetupModal({ onClose }: { onClose: () => void }) {
 
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#1B2B5B] text-white text-xs flex items-center justify-center font-semibold">1</span>
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0C1B3A] text-white text-xs flex items-center justify-center font-semibold">1</span>
               <div className="flex-1">
                 <p className="text-sm font-medium">Check database setup</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Verify the description column exists in your products table.</p>
                 <button
                   onClick={checkSetup}
                   disabled={status === 'checking'}
-                  className="mt-2 text-xs px-3 py-1.5 rounded-lg bg-[#1B2B5B]/10 text-[#1B2B5B] dark:bg-[#2E86C1]/20 dark:text-[#2E86C1] hover:opacity-80 transition-opacity disabled:opacity-50 flex items-center gap-1.5"
+                  className="mt-2 text-xs px-3 py-1.5 rounded-lg bg-[#F0F7FF] text-[#0770E3] hover:opacity-80 transition-opacity disabled:opacity-50 flex items-center gap-1.5"
                 >
                   {status === 'checking' ? <><RefreshCw className="w-3 h-3 animate-spin" />Checking...</> : 'Check Setup'}
                 </button>
@@ -127,14 +127,14 @@ function SetupModal({ onClose }: { onClose: () => void }) {
             )}
 
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#2E86C1] text-white text-xs flex items-center justify-center font-semibold">2</span>
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0770E3] text-white text-xs flex items-center justify-center font-semibold">2</span>
               <div className="flex-1">
                 <p className="text-sm font-medium">Generate product descriptions</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Builds rich searchable descriptions for all products using their commission rules.</p>
                 <button
                   onClick={generateDescriptions}
                   disabled={status === 'generating' || status === 'checking'}
-                  className="mt-2 text-xs px-3 py-1.5 rounded-lg bg-[#2E86C1] text-white hover:bg-[#2574A9] transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                  className="mt-2 text-xs px-3 py-1.5 rounded-lg bg-[#0770E3] text-white hover:bg-[#0558b0] transition-colors disabled:opacity-50 flex items-center gap-1.5"
                 >
                   {status === 'generating' ? <><RefreshCw className="w-3 h-3 animate-spin" />Generating...</> : 'Generate Descriptions'}
                 </button>
@@ -158,7 +158,7 @@ function SetupModal({ onClose }: { onClose: () => void }) {
         <div className="px-5 py-4 border-t border-slate-200 dark:border-slate-700 flex justify-end">
           <button
             onClick={onClose}
-            className="text-sm px-4 py-2 rounded-xl bg-[#2E86C1] text-white hover:bg-[#2574A9] transition-colors font-medium"
+            className="text-sm px-4 py-2 rounded-lg bg-[#0770E3] text-white hover:bg-[#0558b0] transition-colors font-semibold"
           >
             Done
           </button>
@@ -262,19 +262,19 @@ export default function AssistantPage() {
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-4 flex items-center justify-between flex-shrink-0">
+      <div className="px-6 py-4 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-700 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-xl bg-[#0770E3]/10 flex items-center justify-center">
+            <Bot className="w-5 h-5 text-[#0770E3]" />
           </div>
           <div>
-            <h1 className="text-white font-semibold text-base leading-tight">TravelHub AI</h1>
-            <p className="text-white/60 text-xs">Powered by Claude · Ask about products &amp; commissions</p>
+            <h1 className="text-[#161616] dark:text-white font-semibold text-base leading-tight">TravelHub AI</h1>
+            <p className="text-[#8F9BA8] dark:text-slate-400 text-xs">Powered by AI · Ask about products &amp; commissions</p>
           </div>
         </div>
         <button
           onClick={() => setShowSetup(true)}
-          className="flex items-center gap-1.5 text-white/70 hover:text-white text-xs px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all"
+          className="flex items-center gap-1.5 text-[#545454] dark:text-slate-400 hover:text-[#161616] dark:hover:text-white text-xs px-3 py-1.5 rounded-lg hover:bg-[#F3F4F6] transition-all"
           title="Setup AI Assistant"
         >
           <Settings2 className="w-3.5 h-3.5" />
@@ -287,10 +287,10 @@ export default function AssistantPage() {
         {messages.length === 0 && !loading ? (
           /* Empty state with suggestions */
           <div className="flex flex-col items-center justify-center h-full px-6 py-12 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-[#1B2B5B]/10 dark:bg-[#2E86C1]/20 flex items-center justify-center mb-4">
-              <Sparkles className="w-8 h-8 text-[#1B2B5B] dark:text-[#2E86C1]" />
+            <div className="w-16 h-16 rounded-2xl bg-[#F0F7FF] dark:bg-slate-800/50 flex items-center justify-center mb-4">
+              <Sparkles className="w-8 h-8 text-[#0770E3]" />
             </div>
-            <h2 className="text-lg font-semibold mb-1">Ask TravelHub AI</h2>
+            <h2 className="text-lg font-semibold mb-1 dark:text-white">Ask TravelHub AI</h2>
             <p className="text-sm text-muted-foreground max-w-sm mb-8">
               Get instant answers about products, commission rates, and how to maximize your earnings.
             </p>
@@ -299,7 +299,7 @@ export default function AssistantPage() {
                 <button
                   key={s}
                   onClick={() => sendMessage(s)}
-                  className="text-left text-sm px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-card hover:border-[#2E86C1]/50 hover:bg-[#2E86C1]/5 transition-all text-muted-foreground hover:text-foreground"
+                  className="text-left text-sm px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-500 text-slate-700 dark:text-slate-300 bg-transparent dark:bg-slate-800/50 hover:border-[#F39C12] hover:text-[#F39C12] dark:hover:border-[#F39C12] dark:hover:text-[#F39C12] transition-colors"
                 >
                   {s}
                 </button>
@@ -325,8 +325,8 @@ export default function AssistantPage() {
                     className={cn(
                       'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mb-1',
                       msg.role === 'user'
-                        ? 'bg-[#2E86C1]'
-                        : 'bg-[#1B2B5B]'
+                        ? 'bg-[#0770E3]'
+                        : 'bg-[#0C1B3A]'
                     )}
                   >
                     {msg.role === 'user'
@@ -339,12 +339,12 @@ export default function AssistantPage() {
                   <div className={cn('flex flex-col gap-2 max-w-[75%]', msg.role === 'user' ? 'items-end' : 'items-start')}>
                     <div
                       className={cn(
-                        'px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap break-words',
+                        'px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words',
                         msg.role === 'user'
-                          ? 'bg-[#2E86C1] text-white rounded-2xl rounded-br-md'
+                          ? 'bg-[#0770E3] text-white rounded-2xl rounded-tr-sm max-w-[75%] self-end'
                           : msg.error
-                            ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-2xl rounded-bl-md'
-                            : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-foreground rounded-2xl rounded-bl-md'
+                            ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 text-red-700 rounded-2xl rounded-tl-sm max-w-[75%] self-start'
+                            : 'bg-[#F3F4F6] dark:bg-slate-700 text-[#161616] dark:text-white rounded-2xl rounded-tl-sm max-w-[75%] self-start'
                       )}
                     >
                       {msg.error && (
@@ -360,7 +360,7 @@ export default function AssistantPage() {
                           <Link
                             key={source.id}
                             href={`/products/${source.id}`}
-                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-[#1B2B5B]/8 dark:bg-[#2E86C1]/15 text-[#1B2B5B] dark:text-[#2E86C1] border border-[#1B2B5B]/15 dark:border-[#2E86C1]/25 hover:border-[#2E86C1]/50 transition-colors"
+                            className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-[#F0F7FF] text-[#0770E3] border border-[#0770E3]/20 hover:border-[#0770E3]/50 transition-colors"
                           >
                             <span className="font-medium truncate max-w-[120px]">{source.name}</span>
                             <span className="text-[10px] opacity-60 capitalize">{source.type}</span>
@@ -380,7 +380,7 @@ export default function AssistantPage() {
       </div>
 
       {/* Input bar */}
-      <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+      <div className="flex-shrink-0 border-t border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
         <div className="flex items-end gap-2 max-w-4xl mx-auto">
           <div className="flex-1 relative">
             <textarea
@@ -391,14 +391,14 @@ export default function AssistantPage() {
               placeholder="Ask about products, commissions, or earnings..."
               rows={1}
               disabled={loading}
-              className="w-full resize-none rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 pr-12 text-sm text-foreground placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#2E86C1]/50 focus:border-[#2E86C1] transition-all disabled:opacity-60 overflow-hidden"
+              className="w-full resize-none rounded-xl border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 pr-12 text-sm text-[#161616] dark:text-white placeholder-[#8F9BA8] dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0770E3]/50 focus:border-[#0770E3] transition-all disabled:opacity-60 overflow-hidden"
               style={{ minHeight: '48px', maxHeight: '160px' }}
             />
           </div>
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || loading}
-            className="flex-shrink-0 w-11 h-11 rounded-xl bg-[#2E86C1] hover:bg-[#2574A9] active:bg-[#1B5E8A] text-white flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+            className="flex-shrink-0 w-11 h-11 rounded-lg bg-[#0770E3] hover:bg-[#0558b0] text-white flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             aria-label="Send message"
           >
             <SendHorizonal className="w-4 h-4" />

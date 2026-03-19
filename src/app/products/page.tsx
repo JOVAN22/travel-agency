@@ -17,11 +17,14 @@ interface Product {
 }
 
 const typeColors: Record<string, string> = {
+  airline: 'bg-blue-100 text-blue-700',
   flight: 'bg-blue-100 text-blue-700',
-  hotel: 'bg-emerald-100 text-emerald-700',
+  hotel: 'bg-green-100 text-green-700',
   cruise: 'bg-purple-100 text-purple-700',
+  car_rental: 'bg-orange-100 text-orange-700',
+  car: 'bg-orange-100 text-orange-700',
+  package: 'bg-red-100 text-red-700',
   tour: 'bg-orange-100 text-orange-700',
-  car: 'bg-gray-100 text-gray-700',
 }
 
 const containerVariants = {
@@ -76,15 +79,15 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-10">
+      <div className="px-6 pt-8 pb-5 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-700">
         <motion.h1
-          className="text-2xl md:text-3xl font-bold text-white"
+          className="text-2xl md:text-3xl font-bold text-[#161616] dark:text-white"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           Products Catalog
         </motion.h1>
-        <p className="text-white/70 mt-1 text-sm">{total} products available</p>
+        <p className="text-[#8F9BA8] dark:text-slate-400 mt-1 text-sm">{total} products available</p>
       </div>
 
       <div className="p-6 space-y-6">
@@ -134,11 +137,11 @@ export default function ProductsPage() {
             {products.map((product) => (
               <motion.div key={product.id} variants={itemVariants}>
                 <div
-                  className="border rounded-xl p-5 cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:border-[#2E86C1] transition-all bg-card"
+                  className="bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-xl p-5 cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all"
                   onClick={() => router.push(`/products/${product.id}`)}
                 >
                   <div className="flex items-start justify-between gap-2 mb-3">
-                    <h3 className="font-semibold text-sm leading-tight flex-1 min-w-0 truncate">
+                    <h3 className="font-semibold text-sm leading-tight flex-1 min-w-0 truncate text-[#161616] dark:text-white">
                       {product.name}
                     </h3>
                     {product.type && (
@@ -161,7 +164,7 @@ export default function ProductsPage() {
                           style={{ width: `${Math.min(100, (product.max_commission_pct ?? 0) * 4)}%` }}
                         />
                       </div>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                      <span className="text-sm font-medium text-[#1BAC4B] whitespace-nowrap">
                         {product.min_commission_pct}–{product.max_commission_pct}%
                       </span>
                     </div>

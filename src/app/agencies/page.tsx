@@ -59,16 +59,16 @@ export default function AgenciesPage() {
 
   return (
     <div>
-      {/* Hero */}
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-10">
+      {/* Header */}
+      <div className="px-6 pt-8 pb-5 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-700">
         <motion.h1
-          className="text-2xl md:text-3xl font-bold text-white"
+          className="text-2xl md:text-3xl font-bold text-[#161616] dark:text-white"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           Agencies
         </motion.h1>
-        <p className="text-white/70 mt-1 text-sm">{total} agencies total</p>
+        <p className="text-[#8F9BA8] dark:text-slate-400 mt-1 text-sm">{total} agencies total</p>
       </div>
 
       <div className="p-6 space-y-6">
@@ -79,7 +79,7 @@ export default function AgenciesPage() {
             placeholder="Search agencies..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-9 dark:bg-slate-800 dark:border-slate-700"
           />
         </div>
 
@@ -106,15 +106,15 @@ export default function AgenciesPage() {
               <motion.div key={agency.id} variants={itemVariants}>
                 <Link
                   href={`/agencies/${agency.id}`}
-                  className="group block border border-slate-200 dark:border-slate-700 rounded-xl p-5 bg-card hover:shadow-lg hover:-translate-y-0.5 hover:border-[#2E86C1]/50 transition-all duration-200"
+                  className="group block bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 border-l-4 border-l-[#0770E3] rounded-xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm leading-tight truncate group-hover:text-[#2E86C1] transition-colors">
+                      <h3 className="font-semibold text-sm leading-tight truncate group-hover:text-[#0770E3] transition-colors text-[#161616] dark:text-white">
                         {agency.name}
                       </h3>
                       {(agency.city || agency.country) && (
-                        <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1 mt-1 text-xs text-[#8F9BA8] dark:text-slate-400">
                           <MapPin className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate">
                             {[agency.city, agency.country].filter(Boolean).join(', ')}
@@ -122,14 +122,14 @@ export default function AgenciesPage() {
                         </div>
                       )}
                     </div>
-                    <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-[#2E86C1] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0 mt-0.5" />
+                    <ArrowUpRight className="w-4 h-4 text-[#8F9BA8] group-hover:text-[#0770E3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0 mt-0.5" />
                   </div>
                   <div className="mt-4 flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[#1B2B5B]/10 dark:bg-[#2E86C1]/20 flex items-center justify-center">
-                      <Building2 className="w-4 h-4 text-[#1B2B5B] dark:text-[#2E86C1]" />
+                    <div className="w-8 h-8 rounded-full bg-[#F0F7FF] dark:bg-slate-700 flex items-center justify-center">
+                      <Building2 className="w-4 h-4 text-[#0770E3]" />
                     </div>
                     {agency.agent_count !== undefined && (
-                      <span className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[#1B2B5B]/10 text-[#1B2B5B] dark:bg-[#2E86C1]/20 dark:text-[#2E86C1]">
+                      <span className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F0F7FF] dark:bg-slate-700 text-[#0770E3] dark:text-blue-400">
                         <Users className="w-3 h-3" />
                         {agency.agent_count} agent{agency.agent_count !== 1 ? 's' : ''}
                       </span>

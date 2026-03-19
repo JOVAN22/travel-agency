@@ -27,8 +27,8 @@ import {
 
 interface CommissionRule {
   season: string
-  base_pct: number
-  bonus_pct: number
+  base_commission_pct: number
+  bonus_commission_pct: number
   max_days_for_bonus: number
 }
 
@@ -41,11 +41,11 @@ interface Product {
 }
 
 const seasonRowColors: Record<string, string> = {
-  peak_summer: 'bg-red-50 dark:bg-red-900/20',
-  peak_holiday: 'bg-red-50 dark:bg-red-900/20',
-  shoulder: 'bg-yellow-50 dark:bg-yellow-900/20',
-  post_school: 'bg-yellow-50 dark:bg-yellow-900/20',
-  winter: 'bg-green-50 dark:bg-green-900/20',
+  peak_summer: 'bg-red-50 dark:bg-slate-800',
+  peak_holiday: 'bg-red-50 dark:bg-slate-800',
+  shoulder: 'bg-yellow-50 dark:bg-slate-800/50',
+  post_school: 'bg-yellow-50 dark:bg-slate-800/50',
+  winter: 'bg-green-50 dark:bg-slate-800/50',
 }
 
 const typeColors: Record<string, string> = {
@@ -71,9 +71,9 @@ export default function ProductDetailPage() {
 
   const chartData = product?.commission_rules?.map((r) => ({
     season: r.season.replace(/_/g, ' '),
-    base: r.base_pct,
-    bonus: r.bonus_pct,
-    total: r.base_pct + r.bonus_pct,
+    base: r.base_commission_pct,
+    bonus: r.bonus_commission_pct,
+    total: r.base_commission_pct + r.bonus_commission_pct,
   })) ?? []
 
   return (
@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
             {loading ? (
               <Skeleton className="h-48 w-full" />
             ) : (
-              <div className="border rounded-xl overflow-hidden">
+              <div className="border dark:border-slate-700 rounded-xl overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -137,11 +137,11 @@ export default function ProductDetailPage() {
                         <TableCell className="font-medium capitalize">
                           {rule.season.replace(/_/g, ' ')}
                         </TableCell>
-                        <TableCell className="text-right">{rule.base_pct}%</TableCell>
-                        <TableCell className="text-right">{rule.bonus_pct}%</TableCell>
+                        <TableCell className="text-right">{rule.base_commission_pct.toFixed(1)}%</TableCell>
+                        <TableCell className="text-right">{rule.bonus_commission_pct.toFixed(1)}%</TableCell>
                         <TableCell className="text-right">{rule.max_days_for_bonus ?? '—'}</TableCell>
                         <TableCell className="text-right font-semibold text-[#2E86C1]">
-                          {rule.base_pct + rule.bonus_pct}%
+                          {(rule.base_commission_pct + rule.bonus_commission_pct).toFixed(1)}%
                         </TableCell>
                       </TableRow>
                     ))}

@@ -124,24 +124,33 @@ export default function UploadPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-10">
+      <div className="px-6 pt-8 pb-5 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-700">
         <motion.h1
-          className="text-2xl md:text-3xl font-bold text-white"
+          className="text-2xl md:text-3xl font-bold text-[#161616] dark:text-white"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           Data Import
         </motion.h1>
-        <p className="text-white/70 mt-1 text-sm">Upload Excel files to import agencies and agents</p>
+        <p className="text-[#8F9BA8] dark:text-slate-400 mt-1 text-sm">Upload Excel files to import agencies and agents</p>
       </div>
 
       <div className="p-6 max-w-4xl mx-auto space-y-6">
+        {/* Step indicators */}
+        <div className="flex items-center gap-2 text-sm">
+          <span className={`px-3 py-1 rounded-full font-medium ${!parsed && !importing ? 'bg-[#0770E3] text-white' : 'bg-[#F3F4F6] dark:bg-slate-800 text-[#8F9BA8] dark:text-slate-400'}`}>Step 1: Upload</span>
+          <span className="text-[#8F9BA8] dark:text-slate-400">→</span>
+          <span className={`px-3 py-1 rounded-full font-medium ${parsed && !importing ? 'bg-[#0770E3] text-white' : 'bg-[#F3F4F6] dark:bg-slate-800 text-[#8F9BA8] dark:text-slate-400'}`}>Step 2: Preview</span>
+          <span className="text-[#8F9BA8] dark:text-slate-400">→</span>
+          <span className={`px-3 py-1 rounded-full font-medium ${importing ? 'bg-[#0770E3] text-white' : 'bg-[#F3F4F6] dark:bg-slate-800 text-[#8F9BA8] dark:text-slate-400'}`}>Step 3: Import</span>
+        </div>
+
         {/* Drop Zone */}
         <div
-          className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all ${
+          className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${
             isDragging
-              ? 'border-[#2E86C1] bg-[#2E86C1]/5'
-              : 'border-border hover:border-[#2E86C1]/50 hover:bg-muted/30'
+              ? 'border-[#0770E3] bg-[#F0F7FF] dark:bg-slate-700'
+              : 'border-[#0770E3] dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-[#F0F7FF] dark:hover:bg-slate-700'
           }`}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
           onDragLeave={() => setIsDragging(false)}
@@ -155,8 +164,8 @@ export default function UploadPage() {
             className="hidden"
             onChange={handleFileChange}
           />
-          <UploadCloud className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-[#2E86C1]' : 'text-muted-foreground'}`} />
-          <p className="font-semibold mb-1">
+          <UploadCloud className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-[#0770E3]' : 'text-[#0770E3]'}`} />
+          <p className="font-semibold mb-1 dark:text-slate-300">
             {isDragging ? 'Drop your file here' : 'Drag & drop your Excel file'}
           </p>
           <p className="text-sm text-muted-foreground">or click to browse — .xlsx, .xls supported</p>
@@ -187,8 +196,8 @@ export default function UploadPage() {
                         onClick={() => setParsed({ ...parsed, activeSheet: name })}
                         className={`text-xs px-2 py-1 rounded-md border transition-colors ${
                           parsed.activeSheet === name
-                            ? 'bg-[#1B2B5B] text-white border-[#1B2B5B]'
-                            : 'border-border hover:border-[#2E86C1]'
+                            ? 'bg-[#0770E3] text-white border-[#0770E3]'
+                            : 'border-[#E5E7EB] hover:border-[#0770E3]'
                         }`}
                       >
                         {name}
@@ -235,7 +244,7 @@ export default function UploadPage() {
               {importing && (
                 <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                   <motion.div
-                    className="h-full bg-[#2E86C1]"
+                    className="h-full bg-[#0770E3]"
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.2 }}
                   />
@@ -245,7 +254,7 @@ export default function UploadPage() {
               <Button
                 onClick={handleImport}
                 disabled={importing || !parsed}
-                className="w-full bg-[#1B2B5B] hover:bg-[#152147]"
+                className="w-full bg-[#0770E3] hover:bg-[#0558b0] text-white font-semibold rounded-lg transition-colors"
               >
                 {importing ? (
                   <>

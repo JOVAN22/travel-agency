@@ -69,15 +69,15 @@ export default function CalculatorPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#1B2B5B] to-[#2E86C1] px-6 py-10">
+      <div className="px-6 pt-8 pb-5 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-700">
         <motion.h1
-          className="text-2xl md:text-3xl font-bold text-white"
+          className="text-2xl md:text-3xl font-bold text-[#161616] dark:text-white"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           Commission Calculator
         </motion.h1>
-        <p className="text-white/70 mt-1 text-sm">Calculate commission for any product and date</p>
+        <p className="text-[#8F9BA8] dark:text-slate-400 mt-1 text-sm">Calculate commission for any product and date</p>
       </div>
 
       <div className="p-6 max-w-2xl mx-auto space-y-6">
@@ -91,11 +91,11 @@ export default function CalculatorPage() {
           <CardContent className="space-y-4">
             {/* Product */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Product *</label>
+              <label className="text-sm font-medium dark:text-slate-300">Product *</label>
               <select
                 value={productId}
                 onChange={(e) => setProductId(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E86C1]"
+                className="w-full border rounded-lg px-3 py-2 text-sm bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-white text-foreground focus:outline-none focus:ring-2 focus:ring-[#2E86C1]"
               >
                 <option value="">Select a product...</option>
                 {products.map((p) => (
@@ -107,7 +107,7 @@ export default function CalculatorPage() {
             {/* Dates */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Sale Date *</label>
+                <label className="text-sm font-medium dark:text-slate-300">Sale Date *</label>
                 <Input
                   type="date"
                   value={saleDate}
@@ -115,7 +115,7 @@ export default function CalculatorPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Departure Date *</label>
+                <label className="text-sm font-medium dark:text-slate-300">Departure Date *</label>
                 <Input
                   type="date"
                   value={departureDate}
@@ -123,7 +123,7 @@ export default function CalculatorPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Product Listed Date</label>
+                <label className="text-sm font-medium dark:text-slate-300">Product Listed Date</label>
                 <Input
                   type="date"
                   value={listedDate}
@@ -131,7 +131,7 @@ export default function CalculatorPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Sale Price (optional)</label>
+                <label className="text-sm font-medium dark:text-slate-300">Sale Price (optional)</label>
                 <Input
                   type="number"
                   placeholder="0.00"
@@ -146,7 +146,7 @@ export default function CalculatorPage() {
             <Button
               onClick={handleCalculate}
               disabled={!productId || !saleDate || !departureDate || loading}
-              className="w-full sm:w-auto bg-[#2E86C1] hover:bg-[#2574A9] active:bg-[#1B5E8A] text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#0770E3] hover:bg-[#0558b0] text-white font-semibold rounded-lg py-3 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -211,7 +211,7 @@ export default function CalculatorPage() {
                       { label: 'Bonus', value: `${result.bonus_commission_pct}%`, color: 'text-[#F39C12]' },
                       { label: 'Total', value: `${result.total_commission_pct}%`, color: 'text-emerald-600' },
                     ].map(({ label, value, color }) => (
-                      <div key={label} className="border rounded-lg p-3">
+                      <div key={label} className="border dark:border-slate-600 dark:bg-slate-700/50 rounded-lg p-3">
                         <p className={`text-2xl font-bold ${color}`}>{value}</p>
                         <p className="text-xs text-muted-foreground mt-1">{label}</p>
                       </div>
@@ -222,14 +222,12 @@ export default function CalculatorPage() {
 
               {/* Dollar amount */}
               {result.commission_amount !== null && result.commission_amount !== undefined && (
-                <Card className="bg-gradient-to-br from-[#F39C12] to-[#E67E22] text-white">
-                  <CardContent className="pt-6 text-center">
-                    <p className="text-sm text-white/80 mb-1">Commission Amount</p>
-                    <p className="text-4xl font-bold">
-                      ${result.commission_amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div className="bg-[#F0FFF4] dark:bg-green-900/20 border border-[#1BAC4B]/30 dark:border-green-800/30 rounded-xl p-4 text-center">
+                  <p className="text-sm text-[#545454] dark:text-slate-300 mb-1">Commission Amount</p>
+                  <p className="text-2xl font-bold text-[#1BAC4B]">
+                    ${result.commission_amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                </div>
               )}
             </motion.div>
           )}
