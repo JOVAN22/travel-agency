@@ -146,7 +146,7 @@ export default function CalculatorPage() {
             <Button
               onClick={handleCalculate}
               disabled={!productId || !saleDate || !departureDate || loading}
-              className="w-full bg-[#2E86C1] hover:bg-[#2577aa] hover:scale-[1.01] transition-all"
+              className="w-full sm:w-auto bg-[#2E86C1] hover:bg-[#2574A9] active:bg-[#1B5E8A] text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

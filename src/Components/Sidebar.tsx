@@ -12,19 +12,21 @@ import {
   Plane,
   Moon,
   Sun,
+  Bot,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/agencies', label: 'Agencies', icon: Building2 },
-  { href: '/products', label: 'Products', icon: Package },
-  { href: '/search', label: 'Search', icon: Search },
-  { href: '/calculator', label: 'Calculator', icon: Calculator },
-  { href: '/upload', label: 'Upload', icon: Upload },
+  { href: '/', label: 'Dashboard', mobileLabel: 'Dashboard', icon: LayoutDashboard },
+  { href: '/agencies', label: 'Agencies', mobileLabel: 'Agencies', icon: Building2 },
+  { href: '/products', label: 'Products', mobileLabel: 'Products', icon: Package },
+  { href: '/search', label: 'Search', mobileLabel: 'Search', icon: Search },
+  { href: '/calculator', label: 'Calculator', mobileLabel: 'Calc', icon: Calculator },
+  { href: '/assistant', label: 'AI Assistant', mobileLabel: 'AI', icon: Bot },
+  { href: '/upload', label: 'Upload', mobileLabel: 'Upload', icon: Upload },
 ]
 
-const mobileLinks = navLinks.slice(0, 5)
+const mobileLinks = navLinks.slice(0, 6)
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -86,23 +88,23 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Tab Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-around px-2 py-2">
-          {mobileLinks.map(({ href, label, icon: Icon }) => {
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 h-16" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+        <div className="flex items-center justify-around px-2 h-full">
+          {mobileLinks.map(({ href, mobileLabel, icon: Icon }) => {
             const active = isActive(href)
             return (
               <Link
                 key={href}
                 href={href}
                 className={cn(
-                  'flex flex-col items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-colors',
+                  'flex flex-col items-center gap-1 px-1.5 py-1 rounded-lg text-[10px] font-medium transition-colors min-w-0',
                   active
                     ? 'text-[#2E86C1]'
                     : 'text-gray-500 dark:text-gray-400'
                 )}
               >
-                <Icon className="w-5 h-5" />
-                <span>{label}</span>
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                <span className="truncate">{mobileLabel}</span>
               </Link>
             )
           })}

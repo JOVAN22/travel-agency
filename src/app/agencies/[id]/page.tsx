@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { TableRowSkeleton } from '@/components/Skeleton'
 import {
   Table,
   TableBody,
@@ -113,49 +114,94 @@ export default function AgencyDetailPage() {
             </div>
           </div>
           {loading ? (
-            <Skeleton className="h-48 w-full rounded-xl" />
+            <div className="hidden sm:block border rounded-xl overflow-hidden">
+              <table className="w-full">
+                <thead className="border-b bg-muted/40">
+                  <tr>
+                    {['Name', 'Email', 'Role', 'Status'].map((h) => (
+                      <th key={h} className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 5 }).map((_, i) => <TableRowSkeleton key={i} cols={4} />)}
+                </tbody>
+              </table>
+            </div>
           ) : (
-            <div className="border rounded-xl overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.length === 0 ? (
+            <>
+              {/* Desktop Table */}
+              <div className="hidden sm:block border rounded-xl overflow-hidden">
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                        No agents found
-                      </TableCell>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
                     </TableRow>
-                  ) : (
-                    filtered.map((agent) => (
-                      <TableRow key={agent.id}>
-                        <TableCell className="font-medium">{agent.name}</TableCell>
-                        <TableCell className="text-sm text-muted-foreground">{agent.email}</TableCell>
-                        <TableCell className="text-sm">{agent.role}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={agent.is_active ? 'default' : 'destructive'}
-                            className={
-                              agent.is_active
-                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100'
-                                : 'bg-red-100 text-red-700 hover:bg-red-100'
-                            }
-                          >
-                            {agent.is_active ? 'Active' : 'Inactive'}
-                          </Badge>
+                  </TableHeader>
+                  <TableBody>
+                    {filtered.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                          No agents found
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                    ) : (
+                      filtered.map((agent) => (
+                        <TableRow key={agent.id}>
+                          <TableCell className="font-medium">{agent.name}</TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{agent.email}</TableCell>
+                          <TableCell className="text-sm">{agent.role}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={agent.is_active ? 'default' : 'destructive'}
+                              className={
+                                agent.is_active
+                                  ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100'
+                                  : 'bg-red-100 text-red-700 hover:bg-red-100'
+                              }
+                            >
+                              {agent.is_active ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card List */}
+              <div className="sm:hidden space-y-3">
+                {filtered.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8 text-sm">No agents found</p>
+                ) : (
+                  filtered.map((agent) => (
+                    <div key={agent.id} className="border rounded-xl p-4 bg-card space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-medium text-sm">{agent.name}</p>
+                        <Badge
+                          variant={agent.is_active ? 'default' : 'destructive'}
+                          className={
+                            agent.is_active
+                              ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100'
+                              : 'bg-red-100 text-red-700 hover:bg-red-100'
+                          }
+                        >
+                          {agent.is_active ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{agent.email}</p>
+                      {agent.role && (
+                        <p className="text-xs text-muted-foreground">{agent.role}</p>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>

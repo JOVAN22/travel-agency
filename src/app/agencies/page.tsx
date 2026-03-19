@@ -1,12 +1,11 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Search, Building2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Building2, ChevronLeft, ChevronRight, MapPin, Users, ArrowUpRight } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { CardSkeleton } from '@/components/Skeleton'
 
 interface Agency {
   id: string
@@ -25,7 +24,6 @@ const itemVariants = {
 }
 
 export default function AgenciesPage() {
-  const router = useRouter()
   const [agencies, setAgencies] = useState<Agency[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -89,7 +87,7 @@ export default function AgenciesPage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <Skeleton key={i} className="h-32 rounded-xl" />
+              <CardSkeleton key={i} />
             ))}
           </div>
         ) : agencies.length === 0 ? (
@@ -106,30 +104,38 @@ export default function AgenciesPage() {
           >
             {agencies.map((agency) => (
               <motion.div key={agency.id} variants={itemVariants}>
-                <div
-                  className="border rounded-xl p-5 cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:border-[#2E86C1] transition-all bg-card"
-                  onClick={() => router.push(`/agencies/${agency.id}`)}
+                <Link
+                  href={`/agencies/${agency.id}`}
+                  className="group block border border-slate-200 dark:border-slate-700 rounded-xl p-5 bg-card hover:shadow-lg hover:-translate-y-0.5 hover:border-[#2E86C1]/50 transition-all duration-200"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm leading-tight truncate">{agency.name}</h3>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {[agency.city, agency.country].filter(Boolean).join(', ')}
-                      </p>
+                      <h3 className="font-semibold text-sm leading-tight truncate group-hover:text-[#2E86C1] transition-colors">
+                        {agency.name}
+                      </h3>
+                      {(agency.city || agency.country) && (
+                        <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                          <MapPin className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">
+                            {[agency.city, agency.country].filter(Boolean).join(', ')}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    {agency.agent_count !== undefined && (
-                      <Badge variant="secondary" className="text-xs flex-shrink-0">
-                        {agency.agent_count} agents
-                      </Badge>
-                    )}
+                    <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-[#2E86C1] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0 mt-0.5" />
                   </div>
                   <div className="mt-4 flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[#1B2B5B]/10 flex items-center justify-center">
-                      <Building2 className="w-4 h-4 text-[#1B2B5B]" />
+                    <div className="w-8 h-8 rounded-full bg-[#1B2B5B]/10 dark:bg-[#2E86C1]/20 flex items-center justify-center">
+                      <Building2 className="w-4 h-4 text-[#1B2B5B] dark:text-[#2E86C1]" />
                     </div>
-                    <span className="text-xs text-[#2E86C1] font-medium">View details →</span>
+                    {agency.agent_count !== undefined && (
+                      <span className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[#1B2B5B]/10 text-[#1B2B5B] dark:bg-[#2E86C1]/20 dark:text-[#2E86C1]">
+                        <Users className="w-3 h-3" />
+                        {agency.agent_count} agent{agency.agent_count !== 1 ? 's' : ''}
+                      </span>
+                    )}
                   </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </motion.div>

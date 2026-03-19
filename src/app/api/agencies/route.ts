@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
   let query = supabase
     .from('agencies')
-    .select('*', { count: 'exact' })
+    .select('*, agents(count)', { count: 'exact' })
     .range(offset, offset + limit - 1)
     .order('name');
 
@@ -48,8 +48,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch agencies' }, { status: 500 });
   }
 
+  const mapped = (data ?? []).map((agency) => {
+    const { agents, ...rest } = agency as Record<string, unknown> & { agents?: { count: number }[] };
+    return { ...rest, agent_count: agents?.[0]?.count ?? 0 };
+  });
+
   const response: AgenciesResponse = {
-    data: data ?? [],
+    data: mapped,
     pagination: {
       page,
       limit,

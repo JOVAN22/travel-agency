@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { KPISkeleton } from '@/components/Skeleton'
 import {
   BarChart,
   Bar,
@@ -145,14 +146,14 @@ export default function Dashboard() {
       <div className="p-6 space-y-6">
         {/* KPI Cards */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-28 rounded-xl" />
+              <KPISkeleton key={i} />
             ))}
           </div>
         ) : stats ? (
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-5 gap-4"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4"
             variants={containerVariants}
             initial="initial"
             animate="animate"
@@ -160,7 +161,7 @@ export default function Dashboard() {
             {kpiCards(stats).map(({ label, value, icon: Icon, gradient }) => (
               <motion.div key={label} variants={itemVariants}>
                 <div
-                  className={`bg-gradient-to-br ${gradient} rounded-xl p-4 shadow-lg hover:scale-[1.02] transition-transform cursor-default`}
+                  className={`bg-gradient-to-br ${gradient} rounded-xl p-4 sm:p-5 shadow-lg hover:scale-[1.02] transition-transform cursor-default`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-white/80 text-xs font-medium">{label}</span>
@@ -168,7 +169,7 @@ export default function Dashboard() {
                       <Icon className="w-4 h-4 text-white" />
                     </div>
                   </div>
-                  <p className="text-2xl font-bold text-white">{value}</p>
+                  <p className="text-lg sm:text-2xl font-bold text-white">{value}</p>
                 </div>
               </motion.div>
             ))}
