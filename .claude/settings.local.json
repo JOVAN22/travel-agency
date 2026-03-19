@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/travel-agency -maxdepth 2 -type f \\\\\\(-name *.sql -o -name *.prisma -o -name .env* \\\\\\))",
+      "Bash(xargs ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find /c/travel-agency -name tailwind.config.* -o -name globals.css)",
+      "Bash(find /c/travel-agency -not -path */node_modules/* -not -path */.next/* -not -path */.git/* -type f)"
+    ]
+  }
+}
