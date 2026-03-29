@@ -10,9 +10,9 @@ import {
   Sparkles,
   Lightbulb,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
-import { Skeleton } from '@/Components/ui/skeleton'
-import { KPISkeleton } from '@/Components/Skeleton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { KPISkeleton } from '@/components/Skeleton'
 import {
   BarChart,
   Bar,

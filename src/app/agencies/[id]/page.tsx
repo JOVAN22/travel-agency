@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ChevronLeft, Search, Users } from 'lucide-react'
-import { Button } from '@/Components/ui/button'
-import { Input } from '@/Components/ui/input'
-import { Badge } from '@/Components/ui/badge'
-import { Skeleton } from '@/Components/ui/skeleton'
-import { TableRowSkeleton } from '@/Components/Skeleton'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { TableRowSkeleton } from '@/components/Skeleton'
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/Components/ui/table'
+} from '@/components/ui/table'
 
 interface Agent {
   id: string
