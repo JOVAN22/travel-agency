@@ -35,7 +35,10 @@ export default function CalculatorPage() {
   useEffect(() => {
     fetch('/api/products?page=1&limit=100')
       .then((r) => r.json())
-      .then((d) => setProducts(d.products ?? []))
+      .then((d) => {
+        console.log('[calculator] products response:', d)
+        setProducts(d.data ?? [])
+      })
   }, [])
 
   const handleCalculate = async () => {
@@ -123,7 +126,7 @@ export default function CalculatorPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium dark:text-slate-300">Product Listed Date</label>
+                <label className="text-sm font-medium dark:text-slate-300">Product Listed Date *</label>
                 <Input
                   type="date"
                   value={listedDate}
@@ -145,7 +148,7 @@ export default function CalculatorPage() {
 
             <Button
               onClick={handleCalculate}
-              disabled={!productId || !saleDate || !departureDate || loading}
+              disabled={!productId || !saleDate || !departureDate || !listedDate || loading}
               className="w-full bg-[#0770E3] hover:bg-[#0558b0] text-white font-semibold rounded-lg py-3 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
