@@ -18,15 +18,17 @@ interface AgentInput {
   first_name: string;
   last_name: string;
   agency_name: string;
+  email?: string;
+  phone?: string;
   role?: string;
-  status?: string;
 }
 
 interface AgencyRow {
   first_name: string;
   last_name: string;
+  email?: string;
+  phone?: string;
   role?: string;
-  status?: string;
   agency_id: string;
 }
 
@@ -123,13 +125,16 @@ export async function POST(request: NextRequest) {
   const agencyNameToId = new Map<string, string>();
 
   if (validAgencies.length > 0) {
+    console.log('[upload] inserting agencies:', JSON.stringify(validAgencies));
     const { data: insertedAgencies, error: agencyError } = await supabase
       .from('agencies')
       .insert(validAgencies)
       .select('id, name');
 
     if (agencyError) {
-      return NextResponse.json({ error: 'Failed to insert agencies' }, { status: 500 });
+      console.error('[upload] agency insert error:', agencyError);
+      errors.push(`Agency insert failed: ${agencyError.message}`);
+      return NextResponse.json({ errors, inserted_agencies: 0, inserted_agents: 0 }, { status: 500 });
     }
 
     inserted_agencies = insertedAgencies?.length ?? 0;
@@ -191,20 +196,24 @@ export async function POST(request: NextRequest) {
       validAgents.push({
         first_name,
         last_name,
+        email: typeof agent.email === 'string' ? sanitizeText(agent.email) : undefined,
+        phone: typeof agent.phone === 'string' ? sanitizeText(agent.phone) : undefined,
         role: typeof agent.role === 'string' ? sanitizeText(agent.role) : undefined,
-        status: typeof agent.status === 'string' ? sanitizeText(agent.status) : undefined,
         agency_id,
       });
     }
 
     if (validAgents.length > 0) {
+      console.log('[upload] inserting agents:', JSON.stringify(validAgents));
       const { data: insertedAgents, error: agentsError } = await supabase
         .from('agents')
         .insert(validAgents)
         .select('id');
 
       if (agentsError) {
-        return NextResponse.json({ error: 'Failed to insert agents' }, { status: 500 });
+        console.error('[upload] agent insert error:', agentsError);
+        errors.push(`Agent insert failed: ${agentsError.message}`);
+        return NextResponse.json({ errors, inserted_agencies, inserted_agents: 0 }, { status: 500 });
       }
 
       inserted_agents = insertedAgents?.length ?? 0;

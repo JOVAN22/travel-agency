@@ -107,8 +107,8 @@ export default function UploadPage() {
       clearInterval(interval)
       setProgress(100)
       setResult({
-        success: data.inserted ?? data.success ?? 0,
-        errors: data.errors ?? [],
+        success: (data.inserted_agencies ?? 0) + (data.inserted_agents ?? 0),
+        errors: data.errors ?? (data.error ? [data.error] : []),
       })
     } catch (e) {
       clearInterval(interval)
