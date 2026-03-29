@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, Building2, Mail, User } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@/Components/ui/badge'
 
 interface Agency {
   id: string

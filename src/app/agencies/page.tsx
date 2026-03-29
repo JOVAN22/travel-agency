@@ -3,9 +3,9 @@ import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search, Building2, ChevronLeft, ChevronRight, MapPin, Users, ArrowUpRight } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { CardSkeleton } from '@/components/Skeleton'
+import { Input } from '@/Components/ui/input'
+import { Button } from '@/Components/ui/button'
+import { CardSkeleton } from '@/Components/Skeleton'
 
 interface Agency {
   id: string

@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
 import { TrendingUp } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent } from '@/Components/ui/card'
+import { Skeleton } from '@/Components/ui/skeleton'
 
 interface Recommendation {
   product_name: string

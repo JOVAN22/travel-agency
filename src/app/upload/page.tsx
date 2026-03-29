@@ -2,8 +2,8 @@
 import { useState, useRef, DragEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { UploadCloud, CheckCircle, XCircle, FileSpreadsheet, Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/Components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card'
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/Components/ui/table'
 import * as XLSX from 'xlsx'
 
 interface ParsedData {

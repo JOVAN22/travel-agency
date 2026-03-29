@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { Sidebar } from "@/components/Sidebar";
+import { ThemeProvider } from "@/Components/ThemeProvider";
+import { Sidebar } from "@/Components/Sidebar";
 
 const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
 
